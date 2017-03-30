@@ -1,0 +1,50 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = '2'
+
+# how much ram the virtual machine should have
+# export $EPX_MEMORY to override the default
+EPX_MEMORY = ENV['EPX_MEMORY'] ||= '1024'
+
+IP_ADDRESS = {
+  :epx_dev => '192.168.251.48'
+}
+
+BOX_SOURCE = 'http://cloud-images.ubuntu.com/'
+BOX_TYPE = 'vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box'
+ANSIBLE_PLAYBOOK = '../../ansible/playbooks/dev_epx_fullstack.yml'
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.define :epx_dev do |epx|
+    epx.vm.box = 'trusty'
+    epx.vm.box_url = BOX_SOURCE + BOX_TYPE
+    epx.vm.network "private_network", ip: IP_ADDRESS[:epx_dev]
+    epx.vm.hostname = "epx-dev"
+
+    # use all available cpu cores
+    host = RbConfig::CONFIG['host_os']
+    if host =~ /darwin/
+      cpus = `sysctl -n hw.ncpu`.to_i
+    elsif host =~ /linux/
+      cpus = `nproc`.to_i
+    else
+      cpus = 1
+    end
+
+    epx.vm.provider :virtualbox do |vb|
+      vb.customize ['modifyvm', :id, '--cpus', cpus]
+      vb.customize ['modifyvm', :id, '--memory', EPX_MEMORY]
+      vb.customize ['guestproperty', 'set', :id,
+                    '/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold', 300000]
+    end
+
+    epx.vm.synced_folder '../../services/', '/opt/demo/'
+
+    epx.vm.provision 'ansible' do |ansible|
+      ansible.inventory_path = 'hosts'
+      ansible.playbook = ANSIBLE_PLAYBOOK
+      ansible.host_key_checking = false
+    end
+  end
+end

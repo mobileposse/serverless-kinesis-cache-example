@@ -1,0 +1,18 @@
+---
+
+- name: configure the openssh daemon
+  become: true
+  template:
+    src=sshd_config.j2
+    dest=/etc/ssh/sshd_config
+    owner=root
+    group=root
+    mode=0644
+  notify: restart the openssh daemon
+
+- name: start the openssh daemon and enable it on boot
+  become: true
+  service:
+    name=ssh
+    state=started
+    enabled=true

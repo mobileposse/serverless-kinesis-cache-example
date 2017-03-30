@@ -1,0 +1,12 @@
+---
+# great command-line JSON processor
+# unable to use standard apt install (stuck at v1.3)
+
+- name: install the jq binary
+  become: true
+  get_url:
+    url=http://stedolan.github.io/jq/download/linux64/jq
+    dest=/usr/bin/jq
+    owner=root
+    group=root
+    mode=0755

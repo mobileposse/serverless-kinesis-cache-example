@@ -1,0 +1,16 @@
+---
+
+- name: restart the ntp daemon
+  become: true
+  service:
+    name=ntp
+    state=restarted
+
+# anisble init/upstart confusion bug
+# (only affects ansible ~1.9.x?)
+- name: restart the openssh daemon
+  become: true
+  shell: service ssh restart
+#  service:
+#    name=ssh
+#    state=restarted

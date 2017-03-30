@@ -1,0 +1,16 @@
+# sshd server system-wide configuration file
+# see sshd_config(5) for more information
+
+LoginGraceTime 20
+PermitRootLogin no
+MaxAuthTries 4
+MaxSessions 5
+AuthorizedKeysFile .ssh/authorized_keys
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+UsePAM yes
+PrintMotd no
+UsePrivilegeSeparation sandbox
+UseDNS no
+MaxStartups 3:50:10
+Subsystem sftp /usr/lib/openssh/sftp-server

@@ -1,0 +1,9 @@
+# vagrant directories
+.vagrant
+
+# serverless directories
+.serverless
+
+# package directories
+node_modules
+

@@ -1,0 +1,13 @@
+---
+
+- name: install the python utility packages
+  become: true
+  apt:
+    name=python-pip
+    state=present
+
+- name: install the awscli package
+  become: true
+  pip:
+    name=awscli
+    state=latest

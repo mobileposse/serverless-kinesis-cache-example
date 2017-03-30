@@ -1,0 +1,36 @@
+{
+  "Records": [
+    {
+      "kinesis": {
+        "kinesisSchemaVersion": "1.0",
+        "partitionKey": "r2d2",
+        "sequenceNumber": "49571772183786709808856243029231570483295814516092174338",
+        "data": "eyJkZXZpY2VfaWQiOiJyMmQyIiwidGltZSI6IkZlYiAxMywgMjAxNyAxMTo0NDoxOCBQTSIsIm1ldGFfZGF0YSI6Im1vcmsiLCJsb2dzIjpbIkZlYiAxMywgMjAxNyAxMTowMzoxOCBQTXxodHRwOi8vd3d3Lmdvb2dsZS5jb20vfDEiLCJGZWIgMTMsIDIwMTcgMTE6MjM6MTggUE18aHR0cDovL3d3dy55b3V0dWJlLmNvbS98MiIsIkZlYiAxMywgMjAxNyAxMTozMzoxOCBQTXxodHRwOi8vd3d3LmZhY2Vib29rLmNvbS98MSIsIkZlYiAxMywgMjAxNyAxMTozMzoxOCBQTXxodHRwOi8vd3d3LnlhaG9vLmNvbS98NCJdfQ==",
+        "approximateArrivalTimestamp": 1490752583.457
+      },
+      "eventSource": "aws:kinesis",
+      "eventVersion": "1.0",
+      "eventID": "shardId-000000000000:49571772183786709808856243029231570483295814516092174338",
+      "eventName": "aws:kinesis:record",
+      "invokeIdentityArn": "arn:aws:iam::185354281374:role/demo-test-us-east-1-lambdaRole",
+      "awsRegion": "us-east-1",
+      "eventSourceARN": "arn:aws:kinesis:us-east-1:185354281374:stream/demo-test"
+    },
+    {
+      "kinesis": {
+        "kinesisSchemaVersion": "1.0",
+        "partitionKey": "bender",
+        "sequenceNumber": "49571772183786709808856243029232779409115429145266880514",
+        "data": "eyJkZXZpY2VfaWQiOiJiZW5kZXIiLCJ0aW1lIjoiTWFyIDIzLCAyMDE3IDc6Mzg6NDYgUE0iLCJtZXRhX2RhdGEiOiJjb2xkLWJyZXciLCJsb2dzIjpbIk1hciAyMywgMjAxNyAxOjMzOjQxIFBNfGh0dHA6Ly93d3cuZ29vZ2xlLmNvbS98MSIsIk1hciAyMywgMjAxNyAxOjQ1OjAxIFBNfGh0dHA6Ly93d3cuc3BvdGlmeS5jb20vfDMiLCJNYXIgMjMsIDIwMTcgNToyMzozMSBQTXxodHRwOi8vd3d3LnJvYm90LW1hdGNobWFraW5nLmNvbS98MSIsIk1hciAyMywgMjAxNyA2OjU2OjI3IFBNfGh0dHA6Ly93d3cueWFob28uY29tL3w0Il19",
+        "approximateArrivalTimestamp": 1490752583.457
+      },
+      "eventSource": "aws:kinesis",
+      "eventVersion": "1.0",
+      "eventID": "shardId-000000000000:49571772183786709808856243029232779409115429145266880514",
+      "eventName": "aws:kinesis:record",
+      "invokeIdentityArn": "arn:aws:iam::185354281374:role/demo-test-us-east-1-lambdaRole",
+      "awsRegion": "us-east-1",
+      "eventSourceARN": "arn:aws:kinesis:us-east-1:185354281374:stream/demo-test"
+    }
+  ]
+}

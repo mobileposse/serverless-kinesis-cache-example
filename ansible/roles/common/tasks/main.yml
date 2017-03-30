@@ -1,0 +1,17 @@
+---
+
+- name: ensure the apt package cache is up-to-date
+  become: true
+  apt: update_cache=yes
+
+# purge old packages left over from Ubuntu's cloud build
+# to avoid dependency issues
+- name: remove orphaned dependency packages
+  become: true
+  command: /usr/bin/apt-get --assume-yes autoremove
+  changed_when: false
+
+- include: hosts.yml
+- include: openssh.yml
+- include: ntp.yml
+- include: tools.yml

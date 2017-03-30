@@ -1,0 +1,125 @@
+service: demo
+
+custom:
+  local:
+    accountId: MISSING_ACCOUNT
+    emailAlert: MISSING_SES_VALIDATED_EMAIL
+    emailSource: MISSING_SES_VALIDATED_EMAIL.com
+    logGroup: arn:aws:logs:us-east-1:local:log-group:/aws/lambda/*:*:*
+    redisHost: localhost
+    redisPort: 6379
+    region: us-east-1
+    runtime: nodejs4.3
+    securityGroupRedis: MISSING_SECURITY_GROUP
+    stage: local
+    stream: MISSING_STREAM_ARN
+    streamName: demo-local
+    subnet: MISSING_PRIVATE_SUBNET
+  test:
+    accountId: MISSING_ACCOUNT
+    emailAlert: MISSING_SES_VALIDATED_EMAIL
+    emailSource: MISSING_SES_VALIDATED_EMAIL
+    logGroup: arn:aws:logs:us-east-1:test:log-group:/aws/lambda/*:*:*
+    redisHost: demo-test.z6hach.0001.use1.cache.amazonaws.com
+    redisPort: 6379
+    region: us-east-1
+    runtime: nodejs4.3
+    securityGroupRedis: MISSING_SECURITY_GROUP
+    stage: test
+    stream: MISSING_STREAM_ARN
+    streamName: demo-test
+    subnet: MISSING_PRIVATE_SUBNET
+
+provider:
+  name: aws
+  runtime: ${self:custom.${opt:stage}.runtime}
+  region: ${self:custom.${opt:stage}.region}
+  stage: ${self:custom.${opt:stage}.stage}
+  environment:
+    EMAIL_ALERT: ${self:custom.${opt:stage}.emailAlert}
+    EMAIL_SOURCE: ${self:custom.${opt:stage}.emailSource}
+    REDIS_HOST: ${self:custom.${opt:stage}.redisHost}
+    REDIS_PORT: ${self:custom.${opt:stage}.redisPort}
+    REGION: ${self:custom.${opt:stage}.region}
+    STAGE: ${opt:stage}
+    STREAM: ${self:custom.${opt:stage}.streamName}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource: ${self:custom.${opt:stage}.logGroup}
+    - Effect: "Allow"
+      Action:
+        - ec2:CreateNetworkInterface
+        - ec2:AttachNetworkInterface
+        - ec2:DescribeNetworkInterfaces
+        - ec2:DeleteNetworkInterface
+        - ec2:DetachNetworkInterface
+        - ec2:ModifyNetworkInterfaceAttribute
+        - ec2:ResetNetworkInterfaceAttribute
+        - autoscaling:CompleteLifecycleAction
+      Resource: "*"
+    - Effect: Allow
+      Action:
+        - kinesis:*
+      Resource: ${self:custom.${opt:stage}.stream}
+    - Effect: Allow
+      Action:
+        - ses:SendEmail
+      Resource: "*"
+
+# items under stream must be indented four spaces
+# or "EventSourceMapping" will not be created (as
+# arn is a property of stream, not a peer)
+functions:
+  publish:
+    name: demo-publish-${opt:stage}
+    handler: publish.publishStream
+    description: ${self:service} - publish device stream
+    events:
+      - schedule: rate(1 minute)
+  consume:
+    handler: consume.consumeStream
+    name: demo-consume-${opt:stage}
+    description: ${self:service} - consume device stream
+    memorySize: 1024
+    timeout: 300
+    vpc:
+      securityGroupIds:
+        - ${self:custom.${opt:stage}.securityGroupRedis}
+      subnetIds:
+        - ${self:custom.${opt:stage}.subnet}
+    events:
+      - stream:
+          arn: ${self:custom.${opt:stage}.stream}
+          batchSize: 2
+          startingPosition: TRIM_HORIZON
+  configure:
+    handler: configure.configureKeywords
+    name: demo-config-${opt:stage}
+    description: ${self:service} - configure keywords
+    vpc:
+      securityGroupIds:
+        - ${self:custom.${opt:stage}.securityGroupRedis}
+      subnetIds:
+        - ${self:custom.${opt:stage}.subnet}
+  report:
+    handler: report.reportMetrics
+    name: demo-report-${opt:stage}
+    description: ${self:service} - report metrics
+    vpc:
+      securityGroupIds:
+        - ${self:custom.${opt:stage}.securityGroupRedis}
+      subnetIds:
+        - ${self:custom.${opt:stage}.subnet}
+  reset:
+    handler: reset.resetCache
+    name: demo-reset-${opt:stage}
+    description: ${self:service} - flush cache
+    vpc:
+      securityGroupIds:
+        - ${self:custom.${opt:stage}.securityGroupRedis}
+      subnetIds:
+        - ${self:custom.${opt:stage}.subnet}

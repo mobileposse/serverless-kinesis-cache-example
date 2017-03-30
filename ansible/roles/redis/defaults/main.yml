@@ -1,0 +1,6 @@
+---
+# redis variables
+# hardly worth documenting, but if we do not reveal the standard port
+# people will go looking in the conf file
+
+redis_port: 6379

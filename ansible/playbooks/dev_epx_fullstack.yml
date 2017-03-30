@@ -1,0 +1,17 @@
+---
+# provision epx_dev server from ubuntu box
+#
+# what is this "fullstack" nonsense? when using images, it often makes
+# sense to provision a base box with dependencies that rarely change
+# to speed up the build process -- fullstack is the suffix used to let
+# devs know this includes everything, starting from the os image
+
+
+- hosts: development
+  roles:
+    - common
+    - nodejs
+    - aws
+    - git
+    - jq
+    - redis

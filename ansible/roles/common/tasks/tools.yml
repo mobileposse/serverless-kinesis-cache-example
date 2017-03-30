@@ -1,0 +1,47 @@
+---
+
+- name: install compilation-related packages
+  become: true
+  apt: name={{ item }} state=present
+  with_items:
+    - build-essential
+    - libffi-dev
+    - libreadline-dev
+    - libssl-dev
+    - zlib1g-dev
+
+- name: install curl package
+  become: true
+  apt:
+    name=curl
+    state=present
+
+- name: install httplib2 package
+  become: true
+  apt:
+    name=python-httplib2
+    state=present
+
+- name: install unzip package
+  become: true
+  apt:
+    name=unzip
+    state=present
+
+- name: install the htop package
+  become: true
+  apt:
+    name=htop
+    state=present
+
+- name: install vim package
+  become: true
+  apt:
+    name=vim
+    state=present
+
+- name: install emacs package
+  become: true
+  apt:
+    name=emacs
+    state=present

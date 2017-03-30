@@ -1,0 +1,5 @@
+[development]
+epx_dev ansible_ssh_host=192.168.251.48
+
+[vagrant:children]
+development

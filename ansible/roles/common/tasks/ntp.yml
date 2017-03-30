@@ -1,0 +1,24 @@
+---
+
+- name: install the ntp package
+  become: true
+  apt:
+    name=ntp
+    state=present
+
+- name: configure the ntp daemon
+  become: true
+  template:
+    src=ntp.conf.j2
+    dest=/etc/ntp.conf
+    owner=root
+    group=root
+    mode=0644
+  notify: restart the ntp daemon
+
+- name: start the ntp daemon and enable it on boot
+  become: true
+  service: 
+    name=ntp
+    state=started
+    enabled=true
